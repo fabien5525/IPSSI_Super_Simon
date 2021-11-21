@@ -1,0 +1,22 @@
+{
+  "name": "ipssi_super_simon",
+  "version": "1.0.0",
+  "description": "Super Simon en javascript natif pour l'IPSSI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fabien5525/IPSSI_Super_Simon.git"
+  },
+  "author": "Fabien COLARD",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fabien5525/IPSSI_Super_Simon/issues"
+  },
+  "homepage": "https://github.com/fabien5525/IPSSI_Super_Simon#readme",
+  "dependencies": {
+    "mdb-ui-kit": "^3.10.0"
+  }
+}
