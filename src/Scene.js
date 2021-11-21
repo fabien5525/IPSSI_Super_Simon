@@ -1,8 +1,6 @@
-import 'animate.css/animate.min.css';
-import MicroModal from 'micromodal';
 import * as Tone from 'tone';
 
-const debug = true;
+const debug = false;
 
 /**
  * Outils gestion des cookies (setter)
@@ -155,6 +153,8 @@ export default class Scene {
       if (debug) console.log('game : pas de reponse');
       this.memoire = [];
       this.tour = 1;
+      this.nbDeClick = 0;
+      this.updateScore();
       this.numRep = 0;
     } else {
       //On joue en fonction de la réponse
@@ -237,7 +237,6 @@ export default class Scene {
     if (debug) console.log('Game ...');
     setTimeout(() => {
       if (debug) console.log('... Starting !');
-      console.log(this)
       this.game();
     }, 2000);
   }
@@ -288,15 +287,15 @@ export default class Scene {
       <div id="myModal" class="modal">
       <!-- Modal content -->
         <div class="modal-content">
-          <span class="close">&times;</span>
+          <span class="close text-dark justify-content-end">&times;</span>
           <div class="row">
             <div class="col">
-              <span class="text-center">Score</span>
+              <span class="text-center text-dark h1">Score</span>
             </div>
           </div>
           <div class="row">
-            <div class="col"><span class="text-center">Tour : ${this.tour}</span></div>
-            <div class="col"><span class="text-center">Nombre de click : ${this.nbDeClick}</span></div>
+            <div class="col"><span class="text-center h2 text-dark">Tour : ${this.tour}</span></div>
+            <div class="col"><span class="text-center h2 text-dark">Nombre de click : ${this.nbDeClick}</span></div>
           </div>
           <div class="row">
             <div class="col divMenu"></div>
@@ -348,12 +347,14 @@ export default class Scene {
     //btn Menu + Rejouer
     let btnMenu = document.createElement('button');
     btnMenu.innerHTML = 'Menu';
+    btnMenu.className = 'btn btn-dark d-flex justify-content-center';
     btnMenu.addEventListener('click', () => {
       this.initAll();
     });
 
     let btnRejouer = document.createElement('button');
     btnRejouer.innerHTML = 'Rejouer';
+    btnRejouer.className = 'btn btn-dark d-flex justify-content-center';
     btnRejouer.addEventListener('click', () => {
       this.initGame();
     });
@@ -382,8 +383,16 @@ export default class Scene {
     synth.triggerRelease(now + 1);
 
     // PARTIE ANIMATION
-    //if (debug) console.log('animation :', couleur.getId(), div);
+    if (debug) console.log('animation :', couleur.getId(), div);
     div.style.animation = `tr-${couleur.getId()} 1s`;
     setTimeout(() => { div.style.animation = ''; }, 1000);
   }
 }
+
+/*
+  Commentaire :
+
+  Je suis désolé pour se code qui est assez dur à comprendre,
+  J'aurais du m'orienter vers du ReactJs mais je pensais que se serais plus
+  rapide / simple en javascript natif (ce qui est surement pas le cas :/).
+*/
