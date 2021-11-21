@@ -1,8 +1,8 @@
 class Couleur {
-    __constructor(id, nom, codeHexa) {
+    constructor(id, nom, codeHexa) {
         this.id = id;
-        this.nom = nom
-        this.codeHexa = codeHexa
+        this.nom = nom;
+        this.codeHexa = codeHexa;
     }
 
     getNom = () => {
@@ -18,6 +18,10 @@ class Couleur {
     }
 
     toString = () => {
-        return `Id: ${this.id}, Couleur: ${this.rouge}, CodeHexa: ${this.codeHexa}`;
+        return `Id: ${this.id}, Couleur: ${this.nom}, CodeHexa: ${this.codeHexa}`;
+    }
+
+    getHTML = () => {
+        return `<div class="roue_${this.nom}", style="background: ${this.codeHexa};">`;
     }
 }
