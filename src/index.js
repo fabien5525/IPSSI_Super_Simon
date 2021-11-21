@@ -4,25 +4,13 @@ import Scene from './Scene.js';
 
 
 const couleurTab6 = [
-  new Couleur(0, 'Rouge', '#FF0000'),
-  new Couleur(1, 'Bleu', '#0000FF'),
-  new Couleur(2, 'Vert', '#00FF00'),
-  new Couleur(3, 'Jaune', '#FFFF00'),
-  new Couleur(4, 'Orange', '#FF7F00'),
-  new Couleur(5, 'Violet', '#7F00FF')
+  new Couleur(0, 'Rouge', '#FF0000', 'C4'),
+  new Couleur(1, 'Bleu', '#0000FF', 'D4'),
+  new Couleur(2, 'Vert', '#00FF00', 'E4'),
+  new Couleur(3, 'Jaune', '#FFFF00', 'F4'),
+  new Couleur(4, 'Orange', '#FF7F00', 'G4'),
+  new Couleur(5, 'Violet', '#7F00FF', 'A5')
 ];
-
-/**
- * Renvoie une couleur aléatoire en fonction du nombre de couleur disponible 
- * @param {Number} nb Nombre de couleur du jeu
- * @returns {Couleur}
- */
-let couleurAleatoire = (nb) => {
-  if ((nb < 0 && nb > 6) || nb === undefined) return -1;
-
-  const id = Math.ceil(Math.random() * nb) - 1;
-  return couleurTab6[id];
-}
 
 let changeSize = () => {
   document.body.style.width = `${window.innerWidth}px`;

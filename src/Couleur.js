@@ -1,11 +1,12 @@
 export default class Couleur {
-  constructor(id, nom, codeHexa) {
+  constructor(id, nom, codeHexa, note) {
     this.id = id;
     this.nom = nom;
     this.codeHexa = codeHexa;
+    this.note = note;
   }
 
-  getNom = () => {
+  getId = () => {
     return this.id;
   }
 
@@ -16,6 +17,11 @@ export default class Couleur {
   getCodeHexa = () => {
     return this.codeHexa;
   }
+
+  getNote = () => {
+    return this.note;
+  }
+
 
   toString = () => {
     return `Id: ${this.id}, Couleur: ${this.nom}, CodeHexa: ${this.codeHexa}`;
