@@ -1,7 +1,7 @@
 # IPSSI_Super_Simon
 Super Simon en javascript natif pour l'IPSSI
 
-#Comment installer
+# Comment installer
 
 Cloner la repository et installer les dépendances :
 ```shell
