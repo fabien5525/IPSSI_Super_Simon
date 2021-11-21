@@ -9,7 +9,6 @@ const debug = true;
  * @param {*} name Nom de la propriété du cookie
  * @param {*} value Valeur de la propriété du cookie
  */
-
 function setCookie(name, value, days) {
   var expires = "";
   var date = new Date();
@@ -57,14 +56,26 @@ export default class Scene {
     this.couleurTab6 = couleurTab6;
     let th = getCookie('theme');
     this.theme = th ? th : 'default';
+    this.nbDeClick = 0;
     this.initAll();
   }
 
+  /**
+   * Renvoie a l'acceuil
+   */
   initAll = () => {
     //if(debug) console.log(this.theme);
     setCookie('theme', this.theme);
     this.initAcceuil();
     this.initStyle();
+  }
+
+  /**
+   * Actualise le score coté HTML
+   */
+  updateScore = () => {
+    this.spanScoreNbTour.innerHTML = `Tour : ${this.tour ? this.tour : 1}`;
+    this.spanScoreNbClick.innerHTML = `Nombre de clicks : ${this.nbDeClick}`;
   }
 
   /**
@@ -121,11 +132,11 @@ export default class Scene {
 
   initStyle = () => {
     if (this.theme === "dark") {
-      this.divScene.style.backgroundColor = '#36393f'
-      this.divScene.style.color = '#ffffff'
+      this.divScene.style.backgroundColor = '#36393f';
+      this.divScene.style.color = '#ffffff';
     } else {
-      this.divScene.style.backgroundColor = '#f2f3f5'
-      this.divScene.style.color = '#000000'
+      this.divScene.style.backgroundColor = '#f2f3f5';
+      this.divScene.style.color = '#000000';
     }
 
   }
@@ -172,11 +183,27 @@ export default class Scene {
    */
   initGame = () => {
     this.divScene.innerHTML = "";
+    //bandeau de score
     let bandeau = document.createElement('div');
-    bandeau.className = 'row w-100 h-25 m-0 p-0';
+    bandeau.className = 'row w-100 h-25 m-0 pt-3';
+
+    //span score
+    this.spanScoreNbTour = document.createElement('span');
+    this.spanScoreNbClick = document.createElement('span');
+    this.spanScoreNbTour.className = 'col h1 text-center';
+    this.spanScoreNbClick.className = 'col h1 text-center';
+    this.updateScore();
+
+    bandeau.appendChild(this.spanScoreNbTour);
+    bandeau.appendChild(this.spanScoreNbClick);
+
+    //roue des couleurs
     let divRoue = document.createElement('div');
     divRoue.className = 'row w-100 h-75 m-0 p-0';
     //if(debug) console.log(this.nbCouleur, this.couleurTab6)
+    let sty = document.createElement('style');
+    sty.innerHTML = '';
+    divRoue.appendChild(sty);
     for (let i = 0; i < this.nbCouleur; i++) {
       let couleur = this.couleurTab6[i];
       let divPartieDeRoue = document.createElement('div');
@@ -184,8 +211,14 @@ export default class Scene {
       divPartieDeRoue.style.minWidth = `15vh`;
       divPartieDeRoue.style.backgroundColor = couleur.getCodeHexa();
 
+      sty.innerHTML +=
+        `@keyframes tr-${i} {from {background-color: ${couleur.getCodeHexa()};} to {background-color: white;}}
+      `;
+
       divPartieDeRoue.addEventListener('click', () => {
         if (this.status !== '') return;
+        this.nbDeClick++;
+        this.updateScore();
         this.jouerSonEtAnimation(divPartieDeRoue, couleur)
         this.game(i);
       });
@@ -217,15 +250,14 @@ export default class Scene {
     }
 
     //calcul temps pour l'intervalle
-    this.tempsInterval = this.tour < 9 ? (2000 / this.tour) : 250;
+    this.tempsInterval = this.tour < 9 ? (4000 / this.tour) : 250;
     this.tempsInterval += 250;
 
     //on rejoue les anciennes couleur + la nouvelle
     if (debug) console.log("Memoire joue :", i, this.memoire[i].getNom());
 
     //son & animation
-
-    let divTemp = this.divScene.querySelector(`.pid-${i}`);
+    let divTemp = this.divScene.querySelector(`.pid-${this.memoire[i].getId()}`);
     this.jouerSonEtAnimation(divTemp, this.memoire[i], this.tempsInterval);
 
     i++;
@@ -240,14 +272,11 @@ export default class Scene {
    * ainsi que la popup pour rejouer et le score
    */
   initFin = () => {
-    this.divScene.innerHTML =
-      ``;
+    //this.divScene.innerHTML =
+    ``;
     this.status = '';
     //add modal rejouer + montrer le score
 
-    //span score
-    let spanScore = document.createElement('span');
-    spanScore.innerHTML = '';
 
     //btn Menu + Rejouer
     let btnMenu = document.createElement('button');
@@ -283,10 +312,8 @@ export default class Scene {
     synth.triggerRelease(now + att);
 
     // PARTIE ANIMATION
-    /*
-    div.style.opacity = 0;
-    div.classList.add('fadeCustom');
-    */
+    if (debug) console.log('animation :', couleur.getId(), div);
+    div.style.animation = `tr-${couleur.getId()} 1s`;
+    //setTimeout(() => { div.style.animation = ''; }, 1000);
   }
-
 }
