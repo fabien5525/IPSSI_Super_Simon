@@ -64,7 +64,7 @@ export default class Scene {
    * Renvoie a l'acceuil
    */
   initAll = () => {
-    //if(debug) console.log(this.theme);
+    if (debug) console.log(this.theme);
     setCookie('theme', this.theme);
     this.initAcceuil();
     this.initStyle();
@@ -146,12 +146,13 @@ export default class Scene {
    * @param {Number} reponse Reponse sous forme d'id
    */
   game = (reponse) => {
-    //if(debug) console.log('reponse :', reponse);
+    if (debug) console.log('reponse :', reponse);
     if (this.status === 'sonEnCours') return;
     if (debug) console.log("Début jouer couleur");
+    this.spanStatus.innerHTML = 'Veuillez écouter';
     this.status = 'sonEnCours';
     if (reponse === undefined) {
-      //if(debug) console.log('game : pas de reponse');
+      if (debug) console.log('game : pas de reponse');
       this.memoire = [];
       this.tour = 1;
       this.numRep = 0;
@@ -170,10 +171,11 @@ export default class Scene {
       this.tour++;
       let nouvCouleur = couleurAleatoire(this.nbCouleur, this.couleurTab6);
       this.memoire.push(nouvCouleur);
-      setTimeout(this.jouerCouleurs(0));
+      setTimeout(() => { this.jouerCouleurs(0); }, 1500);
       this.numRep = 0;
     } else {
       this.status = '';
+      this.spanStatus.innerHTML = `C'est à vous`;
     }
   }
 
@@ -192,15 +194,20 @@ export default class Scene {
     this.spanScoreNbClick = document.createElement('span');
     this.spanScoreNbTour.className = 'col h1 text-center';
     this.spanScoreNbClick.className = 'col h1 text-center';
+
+    this.spanStatus = document.createElement('span');
+    this.spanStatus.className = 'col h1 text-center';
     this.updateScore();
 
     bandeau.appendChild(this.spanScoreNbTour);
+    bandeau.appendChild(this.spanStatus);
     bandeau.appendChild(this.spanScoreNbClick);
+
 
     //roue des couleurs
     let divRoue = document.createElement('div');
     divRoue.className = 'row w-100 h-75 m-0 p-0';
-    //if(debug) console.log(this.nbCouleur, this.couleurTab6)
+    if (debug) console.log(this.nbCouleur, this.couleurTab6)
     let sty = document.createElement('style');
     sty.innerHTML = '';
     divRoue.appendChild(sty);
@@ -242,15 +249,16 @@ export default class Scene {
    */
   jouerCouleurs = (i) => {
     if (this.memoire.length < 1) return;
-    //if(debug) console.log('test', i, i < this.memoire.length)
+    if (debug) console.log('test', i, i < this.memoire.length)
     if (!(i < this.memoire.length)) {
       if (debug) console.log('Fin jouer couleurs');
+      this.spanStatus.innerHTML = `C'est à vous`;
       this.status = "";
       return;
     }
 
     //calcul temps pour l'intervalle
-    this.tempsInterval = this.tour < 9 ? (4000 / this.tour) : 250;
+    this.tempsInterval = this.tour < 9 ? (2750 - this.tour * 250) : 750;
     this.tempsInterval += 250;
 
     //on rejoue les anciennes couleur + la nouvelle
@@ -258,11 +266,12 @@ export default class Scene {
 
     //son & animation
     let divTemp = this.divScene.querySelector(`.pid-${this.memoire[i].getId()}`);
-    this.jouerSonEtAnimation(divTemp, this.memoire[i], this.tempsInterval);
+    this.jouerSonEtAnimation(divTemp, this.memoire[i]);
 
     i++;
     if (debug) console.log('attendre: ', this.tempsInterval);
-    setTimeout(this.jouerCouleurs(i), this.tempsInterval);
+    //console.warn('MAIS POURQUOI SA ATTEND PAS 2.75s ????????????????'); // c'est bon.
+    setTimeout(() => { this.jouerCouleurs(i); }, this.tempsInterval);
   }
 
 
@@ -272,10 +281,68 @@ export default class Scene {
    * ainsi que la popup pour rejouer et le score
    */
   initFin = () => {
-    //this.divScene.innerHTML =
-    ``;
     this.status = '';
-    //add modal rejouer + montrer le score
+    //ajout modal rejouer + montrer le score
+    this.divScene.innerHTML =
+      `
+      <div id="myModal" class="modal">
+      <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <div class="row">
+            <div class="col">
+              <span class="text-center">Score</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col"><span class="text-center">Tour : ${this.tour}</span></div>
+            <div class="col"><span class="text-center">Nombre de click : ${this.nbDeClick}</span></div>
+          </div>
+          <div class="row">
+            <div class="col divMenu"></div>
+            <div class="col divRejouer"></div>
+          </div>
+        </div>
+      </div>`;
+    //style modal
+    let sty = document.createElement("style");
+    sty.innerHTML = `
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+    
+    /* Modal Content/Box */
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto; /* 15% from the top and centered */
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%; /* Could be more or less, depending on screen size */
+    }
+    
+    /* The Close Button */
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }`;
 
 
     //btn Menu + Rejouer
@@ -290,6 +357,11 @@ export default class Scene {
     btnRejouer.addEventListener('click', () => {
       this.initGame();
     });
+
+    this.divScene.querySelector(".divMenu").appendChild(btnMenu);
+    this.divScene.querySelector(".divRejouer").appendChild(btnRejouer);
+
+    this.divScene.querySelector('#myModal').style.display = 'block';
   }
 
   /**
@@ -307,13 +379,11 @@ export default class Scene {
     // Déclenche la note
     synth.triggerAttack(couleur.getNote(), now);
     // Attend avant de l'arreter
-    let att = this.tempsInterval ? 0.2 + ((this.tempsInterval - 1000) / 1000) : 0.4;
-    if (debug) console.log(att);
-    synth.triggerRelease(now + att);
+    synth.triggerRelease(now + 1);
 
     // PARTIE ANIMATION
-    if (debug) console.log('animation :', couleur.getId(), div);
+    //if (debug) console.log('animation :', couleur.getId(), div);
     div.style.animation = `tr-${couleur.getId()} 1s`;
-    //setTimeout(() => { div.style.animation = ''; }, 1000);
+    setTimeout(() => { div.style.animation = ''; }, 1000);
   }
 }
