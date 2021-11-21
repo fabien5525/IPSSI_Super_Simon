@@ -10,9 +10,13 @@ Cloner la repository et installer les dépendances :
 ```shell
 git clone https://github.com/fabien5525/IPSSI_Super_Simon
 cd IPSSI_Super_Simon
-npm build
+npm run build
+npm run start
 ```
 
 Après il suffit d'ouvrir le fichier index.html
 
 Auteur : Fabien COLARD
+S'il y a un problème
+06 47 57 66 85
+fcolard9@gmail.com
