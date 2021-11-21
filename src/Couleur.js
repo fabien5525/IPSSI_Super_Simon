@@ -1,4 +1,4 @@
-class Couleur {
+export default class Couleur {
   constructor(id, nom, codeHexa) {
     this.id = id;
     this.nom = nom;

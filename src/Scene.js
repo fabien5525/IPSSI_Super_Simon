@@ -1,3 +1,6 @@
+import 'animate.css';
+
+
 /**
  * Outils gestion des cookies (setter)
  * @param {*} name Nom de la propriété du cookie
@@ -27,7 +30,7 @@ function getCookie(name) {
   return null;
 }
 
-class Scene {
+export default class Scene {
   /**
    * @param {Array<Couleur>} couleurTab6 Contante des couleurs du jeu
    */
@@ -56,6 +59,11 @@ class Scene {
     this.divScene.innerHTML = "";
     let divBoutons = document.createElement('div');
     divBoutons.className = 'position-absolute top-50 start-50 translate-middle row';
+
+    //Ajout du Titre
+    let divTitre = document.createElement('p');
+    divTitre.innerHTML = "Super Simon";
+    divTitre.className = 'display-1 position-absolute top-0 start-50 translate-middle-x mt-5';
 
     //Ajouton boutton NORMAL / DIFFICILE
     let btnNormal = document.createElement('button');
@@ -91,6 +99,7 @@ class Scene {
     divBoutons.appendChild(btnNormal);
     divBoutons.appendChild(btnDifficle);
 
+    this.divScene.appendChild(divTitre);
     this.divScene.appendChild(btnParametre);
     this.divScene.appendChild(divBoutons);
   }
@@ -106,11 +115,11 @@ class Scene {
 
   }
 
-  
+
   /**
    * Initialise la partie coté HTML
    */
-   initGame = () => {
+  initGame = () => {
     this.divScene.innerHTML = "";
     let bandeau = document.createElement('div');
     bandeau.className = 'row w-100 h-25 m-0 p-0';
@@ -123,8 +132,14 @@ class Scene {
       divPartieDeRoue.className = `col pid-${i}`;
       divPartieDeRoue.style.minWidth = `15vh`;
       divPartieDeRoue.style.backgroundColor = couleur.getCodeHexa();
-      divPartieDeRoue.addEventListener('click',() => {
-        let a = divPartieDeRoue.classList.add('animClick')
+      divPartieDeRoue.addEventListener('click', () => {
+        console.log('animate : ' + couleur.getNom());
+        let a = divPartieDeRoue;
+        a.classList.add(
+          'animate__animated',
+          'animate__fadeIn',
+          'animate__fast'
+        );
       });
       divRoue.appendChild(divPartieDeRoue);
     }

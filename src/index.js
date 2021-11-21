@@ -1,3 +1,8 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Couleur from './Couleur.js';
+import Scene from './Scene.js';
+
+
 const couleurTab6 = [
   new Couleur(0, 'Rouge', '#FF0000'),
   new Couleur(1, 'Bleu', '#0000FF'),
